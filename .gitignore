@@ -156,5 +156,8 @@ vite.config.ts.timestamp-*
 .idea/
 .vscode/
 
+# Claude Code
+.claude/settings.local.json
+
 # Go compiled binary
 golang/helloWorld
