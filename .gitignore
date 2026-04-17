@@ -159,5 +159,8 @@ vite.config.ts.timestamp-*
 # Claude Code
 .claude/settings.local.json
 
+# Codex
+.openchrome/
+
 # Go compiled binary
 golang/helloWorld
