@@ -1,20 +1,10 @@
----
-name: daily-trends
-description: Hacker News/GitHub Trending에서 최근 48시간 개발자 트렌드 10개를 수집해 sandbox.md에 기록하고 커밋/푸시한다.
-disable-model-invocation: true
-allowed-tools: Bash(codex *) Bash(npx *) Bash(git *) Read
----
+#!/usr/bin/env bash
+set -euo pipefail
 
-# 일일 개발자 트렌드 수집
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 
-매일 실행하여 최근 개발자 트렌드를 sandbox.md에 누적 기록하고 원격 저장소에 푸시한다.
-
-## 절차
-
-아래 쉘 스크립트를 순서대로 실행한다. 각 단계는 이전 단계의 성공을 전제로 한다.
-
-```bash
-codex exec "
+codex exec "$(cat <<'PROMPT'
   다음 소스에서 최근 48시간 이내에 올라온 개발자 트렌드 주제 10개를 찾아줘:
   - Hacker News (top/new)
   - GitHub Trending (오늘 기준)
@@ -55,7 +45,8 @@ codex exec "
     4) '놓치면 안 되는 핵심 포인트나 주의사항:'
   - '실무 영향: ... 즉시 활용: ... 방향: ... 주의: ...'처럼 한 줄 문단으로 합치지 마.
   - 각 하위 불릿은 한 문장 이상으로 구체적으로 작성해.
-"
+PROMPT
+)"
 
 npx prettier --write sandbox.md
 
@@ -73,11 +64,3 @@ git fetch origin --prune
 git pull --rebase
 
 git push
-```
-
-## 규칙
-
-- 스크립트를 임의로 수정하지 말고 그대로 실행한다.
-- codex exec는 시간이 오래 걸릴 수 있으므로 충분한 타임아웃을 확보한다.
-- 각 단계가 실패하면 중단하고 원인을 파악한다. 특히 `git pull --rebase`에서 충돌이 발생하면 사용자에게 알린다.
-- 커밋 메시지는 codex가 자동 생성하므로 별도 가공하지 않는다.
